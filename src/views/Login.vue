@@ -19,7 +19,7 @@
                 <el-input type="password" clearable v-model="loginForm.upass"></el-input>
               </el-form-item>
             </el-form>
-            <el-button type="primary">登录</el-button>
+            <el-button type="primary" @click="loginFunc">登录</el-button>
           </div>
         </el-card>
       </div>
@@ -28,6 +28,8 @@
 </template>
 
 <script>
+  import { mapGetters, mapActions } from 'vuex'
+
   export default {
     name: 'Login',
     data() {
@@ -37,6 +39,61 @@
           upass: ''
         }
       }
+    },
+    computed: {
+      ...mapGetters(['uid', 'uname', 'aid'])
+    },
+    created: function() {
+      this.$axios.get('/api/check')
+        .then(res => {
+          if (res.data.code === 1) {
+            this.setUid(res.data.data.uid)
+            this.setUname(res.data.data.uname)
+            this.setAid(res.data.data.aid)
+            this.$router.push({ path: '/' })
+          } else {
+            this.setUid(null)
+            this.setUname(null)
+            this.setAid(null)
+          }
+        })
+        .catch(() => {
+          this.$message({
+            message: '网络错误',
+            type: 'error'
+          })
+        })
+    },
+    methods: {
+      loginFunc() {
+        this.$axios.post('/api/admin/login', this.loginForm)
+          .then(res => {
+            if (res.data.code === 1) {
+              this.setUid(res.data.data.uid)
+              this.setUname(res.data.data.uname)
+              this.setAid(res.data.data.aid)
+              this.$message({
+                message: '登录成功，跳转中...',
+                type: 'success'
+              })
+              setTimeout(() => {
+                this.$router.push({ path: '/' })
+              }, 1000)
+            } else {
+              this.$message({
+                message: '用户名或密码错误',
+                type: 'error'
+              })
+            }
+          })
+          .catch(() => {
+            this.$message({
+              message: '网络错误',
+              type: 'error'
+            })
+          })
+      },
+      ...mapActions(['setUid', 'setUname', 'setAid'])
     }
   }
 </script>

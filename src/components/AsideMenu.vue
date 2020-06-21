@@ -9,36 +9,31 @@
       unique-opened
       router
     >
-      <div class="aside-title">
+      <div class="aside-logo">
         <div class="blank10"></div>
-        <span>控&nbsp;制&nbsp;面&nbsp;板</span>
+        <img src="../assets/logo.png" alt="Dashboard" />
         <div class="blank20"></div>
       </div>
       <el-menu-item class="aside-menu-item" index="/">
         <i class="el-icon-odometer"></i>
-        <span>&nbsp;监&nbsp;控</span>
+        <span>&nbsp;总&nbsp;览</span>
       </el-menu-item>
-<!--      <el-submenu class="aside-menu-item" index="2">-->
-<!--        <template slot="title">-->
-<!--          <i class="el-icon-coin"></i>-->
-<!--          <span>&nbsp;设&nbsp;备</span>-->
-<!--        </template>-->
-<!--        <el-menu-item class="aside-submenu-item" index="devlist">-->
-<!--          <span>设&nbsp;备&nbsp;列&nbsp;表</span>-->
-<!--        </el-menu-item>-->
-<!--        <el-menu-item class="aside-submenu-item" index="devmap">-->
-<!--          <span>设&nbsp;备&nbsp;地&nbsp;图</span>-->
-<!--        </el-menu-item>-->
-<!--      </el-submenu>-->
-      <el-menu-item class="aside-menu-item" index="/thread">
-        <i class="el-icon-document-copy"></i>
-        <span>&nbsp;主&nbsp;题</span>
-      </el-menu-item>
-      <el-menu-item class="aside-menu-item" index="/comm">
-        <i class="el-icon-chat-dot-square"></i>
-        <span>&nbsp;评&nbsp;论</span>
-      </el-menu-item>
-      <el-submenu class="aside-menu-item" index="4">
+      <el-submenu class="aside-menu-item" index="1">
+        <template slot="title">
+          <i class="el-icon-document-copy"></i>
+          <span>&nbsp;内&nbsp;容</span>
+        </template>
+        <el-menu-item class="aside-submenu-item" index="thread">
+          <span>主&nbsp;题&nbsp;管&nbsp;理</span>
+        </el-menu-item>
+        <el-menu-item class="aside-submenu-item" index="forum">
+          <span>分&nbsp;区&nbsp;管&nbsp;理</span>
+        </el-menu-item>
+        <el-menu-item class="aside-submenu-item" index="comm">
+          <span>评&nbsp;论&nbsp;管&nbsp;理</span>
+        </el-menu-item>
+      </el-submenu>
+      <el-submenu class="aside-menu-item" index="2" v-if="aid === 4 || aid === 3">
         <template slot="title">
           <i class="el-icon-user"></i>
           <span>&nbsp;用&nbsp;户</span>
@@ -50,6 +45,10 @@
           <span>封&nbsp;禁&nbsp;用&nbsp;户</span>
         </el-menu-item>
       </el-submenu>
+      <el-menu-item class="aside-menu-item" index="notice" v-if="aid === 4 || aid === 3">
+        <i class="el-icon-news"></i>
+        <span>&nbsp;通&nbsp;知</span>
+      </el-menu-item>
       <el-menu-item class="aside-menu-item" index="about">
         <i class="el-icon-help"></i>
         <span>&nbsp;关&nbsp;于</span>
@@ -59,8 +58,13 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
+
   export default {
-    name: "AsideMenu"
+    name: "AsideMenu",
+    computed: {
+      ...mapGetters(['uid', 'uname', 'aid'])
+    },
   }
 </script>
 
@@ -81,15 +85,13 @@
   .aside-submenu-item
     text-align center
 
-  .aside-title
-    margin-top 0.5em
+  .aside-logo
+    margin-top 20px
     width 180px
     display grid
     border-bottom 1px solid #2b2c30
-    color #ffffff
-    font-size 1.5em
-    span
-      width 180px
+    img
+      width 80px
       margin auto
 
   .el-menu-item.is-active

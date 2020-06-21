@@ -21,6 +21,11 @@ const routes = [
         component: () => import('src/views/ThreadMgr')
       },
       {
+        path: '/forum',
+        name: 'ForumMgr',
+        component: () => import('src/views/ForumMgr')
+      },
+      {
         path: '/comm',
         name: 'CommMgr',
         component: () => import('src/views/CommMgr')
@@ -34,6 +39,11 @@ const routes = [
         path: '/blacklist',
         name: 'UserBlack',
         component: () => import('src/views/UserBlack')
+      },
+      {
+        path: '/notice',
+        name: 'NoticeMgr',
+        component: () => import('src/views/NoticeMgr')
       },
       {
         path: '/about',

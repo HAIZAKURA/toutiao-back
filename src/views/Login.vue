@@ -13,10 +13,10 @@
               :model="loginForm"
             >
               <el-form-item label="用户名">
-                <el-input type="text" clearable v-model="loginForm.uname"></el-input>
+                <el-input type="text" ref="unameInput" clearable v-model="loginForm.uname"></el-input>
               </el-form-item>
               <el-form-item label="密码">
-                <el-input type="password" clearable v-model="loginForm.upass"></el-input>
+                <el-input type="password" clearable v-model="loginForm.upass" @keyup.enter.native="loginFunc"></el-input>
               </el-form-item>
             </el-form>
             <el-button type="primary" @click="loginFunc">登录</el-button>
@@ -63,6 +63,9 @@
             type: 'error'
           })
         })
+    },
+    mounted: function () {
+      this.$refs.unameInput.focus()
     },
     methods: {
       loginFunc() {

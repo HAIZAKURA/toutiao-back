@@ -47,16 +47,15 @@
         >
         </el-table-column>
         <el-table-column
-          prop="fid"
+          prop="fname"
           label="分区"
           min-width="30"
-          :formatter="forumFormat"
           sortable
         >
         </el-table-column>
         <el-table-column
-          prop="uid"
-          label="用户ID"
+          prop="uname"
+          label="用户"
           min-width="30"
           sortable
         >
@@ -208,12 +207,6 @@
           pageSize: 20
         },
         pageTotal: 0,
-        forumList: [
-          {
-            fid: 1,
-            fname: "公告"
-          }
-        ],
         threadListHeight: window.innerHeight * 0.75,
         threadList: [],
         threadLoding: true,
@@ -327,16 +320,6 @@
           return ""
         }
         return data === 1 ? "是" : "否"
-      },
-      forumFormat: function (row, column) {
-        let data = row[column.property]
-        if (data === undefined) {
-          return ""
-        }
-        function checkFid(item) {
-          return item.fid === data
-        }
-        return this.forumList[this.forumList.findIndex(checkFid)].fname
       },
       getThreadList(currentPage) {
         this.threadLoding = true

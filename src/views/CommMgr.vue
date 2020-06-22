@@ -37,8 +37,8 @@
           :formatter="dateFormat"
         ></el-table-column>
         <el-table-column
-          prop="uid"
-          label="用户ID"
+          prop="uname"
+          label="用户"
           min-width="30"
           sortable
         ></el-table-column>

@@ -41,11 +41,10 @@
           :formatter="dateFormat"
         ></el-table-column>
         <el-table-column
-          prop="aid"
+          prop="aname"
           label="用户组"
           min-width="20"
           sortable
-          :formatter="authFormat"
         ></el-table-column>
         <el-table-column
           prop="ustat"
@@ -149,12 +148,6 @@
           pageSize: 10
         },
         pageTotal: 0,
-        authList: [
-          {
-            aid: 1,
-            aname: "用户"
-          }
-        ],
         userListHeight: window.innerHeight * 0.75,
         userList: [],
         userCreate: {
@@ -221,16 +214,6 @@
           return ""
         }
         return moment(data).tz("Asia/Shanghai").format("YYYY-MM-DD HH:mm:ss")
-      },
-      authFormat: function (row, column) {
-        let data = row[column.property]
-        if (data === undefined) {
-          return ""
-        }
-        function checkAid(item) {
-          return item.aid === data
-        }
-        return this.authList[this.authList.findIndex(checkAid)].aname
       },
       statusFormat: function (row, column) {
         let data = row[column.property]

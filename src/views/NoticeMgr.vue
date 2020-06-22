@@ -2,9 +2,9 @@
   <div class="notice-mgr">
     <div class="title">
       <span class="title-text">通&nbsp;知&nbsp;管&nbsp;理</span>
+      <span class="title-text-small">Notice Management</span>
     </div>
     <el-divider></el-divider>
-    <span>Notice Management</span>
   </div>
 </template>
 
@@ -19,4 +19,6 @@
     text-align left
     &-text
       font-size 2em
+    &-text-small
+      margin-left 0.5em
 </style>

@@ -41,7 +41,7 @@
         <el-menu-item class="aside-submenu-item" index="user">
           <span>用&nbsp;户&nbsp;管&nbsp;理</span>
         </el-menu-item>
-        <el-menu-item class="aside-submenu-item" index="blacklist">
+        <el-menu-item class="aside-submenu-item" index="blacklist" style="display: none">
           <span>封&nbsp;禁&nbsp;用&nbsp;户</span>
         </el-menu-item>
       </el-submenu>

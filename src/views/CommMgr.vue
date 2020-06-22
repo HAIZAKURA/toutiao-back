@@ -2,9 +2,9 @@
   <div class="comm-mgr">
     <div class="title">
       <span class="title-text">评&nbsp;论&nbsp;管&nbsp;理</span>
+      <span class="title-text-small">Comment Management</span>
     </div>
     <el-divider></el-divider>
-    <span>Comment Management</span>
   </div>
 </template>
 
@@ -19,4 +19,6 @@
     text-align left
     &-text
       font-size 2em
+    &-text-small
+      margin-left 0.5em
 </style>

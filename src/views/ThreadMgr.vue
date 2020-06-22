@@ -3,6 +3,11 @@
     <div class="title">
       <span class="title-text">主&nbsp;题&nbsp;管&nbsp;理</span>
       <span class="title-text-small">Thread Management</span>
+      <div class="title-btn">
+        <el-tooltip class="item" effect="dark" content="创建主题" placement="left">
+          <el-button type="success" icon="el-icon-plus" circle @click="handleCreateOpen"></el-button>
+        </el-tooltip>
+      </div>
     </div>
     <el-divider></el-divider>
     <div class="thread" ref="threadTable">
@@ -102,16 +107,10 @@
       </el-pagination>
     </div>
 
-    <div class="create-btn">
-      <el-tooltip class="item" effect="dark" content="创建主题" placement="left">
-        <el-button type="success" icon="el-icon-plus" circle></el-button>
-      </el-tooltip>
-    </div>
-
     <!-- Edit Dialog -->
     <el-dialog
       title="修 改 主 题"
-      :visible.sync="editDialogVisable"
+      :visible.sync="editDialogVisible"
       width="60%"
       top="6vh"
       :close-on-click-modal="false"
@@ -121,7 +120,7 @@
       center
     >
       <div class="editFormDiv">
-        <el-form ref="editForm" :model="threadDetail" label-width="80px">
+        <el-form ref="editForm" label-position="left" :model="threadDetail" label-width="80px">
           <el-form-item label="标题">
             <el-input
               maxlength="40"
@@ -146,11 +145,59 @@
       </span>
     </el-dialog>
 
+    <!-- Create Dialog -->
+    <el-dialog
+      title="新 增 主 题"
+      :visible.sync="createDialogVisible"
+      width="60%"
+      top="6vh"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :show-close="false"
+      :destroy-on-close="true"
+      center
+    >
+      <div class="createFormDiv">
+        <el-form ref="createForm" label-position="left" :model="threadCreate" label-width="80px">
+          <el-form-item label="标题">
+            <el-input
+              maxlength="40"
+              v-model="threadCreate.tname"
+              show-word-limit
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="内容">
+            <el-input
+              type="textarea"
+              maxlength="10000"
+              v-model="threadCreate.tcont"
+              :autosize="{ minRows: 8, maxRows: 16 }"
+              show-word-limit
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="分区">
+            <el-select v-model="threadCreate.fid" placeholder="请选择">
+              <el-option
+                v-for="item in forumList"
+                :key="item.fid"
+                :label="item.fname"
+                :value="item.fid">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </div>
+      <span slot="footer">
+        <el-button @click="handleCreateClose">取&nbsp;消</el-button>
+        <el-button type="primary" @click="createThread">确&nbsp;定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
-  import moment from "moment"
+  import moment from "moment-timezone"
 
   export default {
     name: "ThreadMgr",
@@ -161,12 +208,27 @@
           pageSize: 20
         },
         pageTotal: 0,
-        forumList: [],
+        forumList: [
+          {
+            fid: 1,
+            fname: "公告"
+          }
+        ],
         threadListHeight: window.innerHeight * 0.75,
         threadList: [],
         threadLoding: true,
-        threadDetail: "",
-        editDialogVisable: false
+        threadDetail: {
+          tid: "",
+          tname: "",
+          tcont: ""
+        },
+        threadCreate: {
+          tname: "",
+          tcont: "",
+          fid: 1
+        },
+        editDialogVisible: false,
+        createDialogVisible: false
       }
     },
     created() {
@@ -192,11 +254,11 @@
     methods: {
       handleEditOpen(tid) {
         this.getThreadDetail(tid)
-        this.editDialogVisable = true
+        this.editDialogVisible = true
       },
       handleEditClose() {
         this.threadDetail = ""
-        this.editDialogVisable = false
+        this.editDialogVisible = false
       },
       handleEditConfirm(tid) {
         this.$axios.put('/api/thread/' + tid, this.threadDetail)
@@ -233,12 +295,24 @@
       handleDeltetClose() {
         console.log("")
       },
+      handleCreateOpen() {
+        this.threadCreate.tname = ""
+        this.threadCreate.tcont = ""
+        this.threadCreate.fid = 1
+        this.createDialogVisible = true
+      },
+      handleCreateClose() {
+        this.threadCreate.tname = ""
+        this.threadCreate.tcont = ""
+        this.threadCreate.fid = 1
+        this.createDialogVisible = false
+      },
       dateFormat: function (row, column) {
         let data = row[column.property]
         if (data === undefined) {
           return ""
         }
-        return moment(data).format("YYYY-MM-DD HH:mm:ss")
+        return moment(data).tz("Asia/Shanghai").format("YYYY-MM-DD HH:mm:ss")
       },
       topFormat: function (row, column) {
         let data = row[column.property]
@@ -369,6 +443,30 @@
               type: "error"
             })
           })
+      },
+      createThread() {
+        this.$axios.post('/api/thread', this.threadCreate)
+          .then(res => {
+            if (res.data.code === 1) {
+              this.$message({
+                message: "新增主题成功",
+                type: "success"
+              })
+            } else {
+              this.$message({
+                message: "系统错误或权限不足",
+                type: "error"
+              })
+            }
+            this.getThreadList(this.query.pageIndex)
+            this.handleCreateClose()
+          })
+          .catch(() => {
+            this.$message({
+              message: "网络错误",
+              type: "error"
+            })
+          })
       }
     }
   }
@@ -381,12 +479,11 @@
       font-size 2em
     &-text-small
       margin-left 0.5em
+    &-btn
+      height 2em
+      line-height 2em
+      float right
 
   .thread-pagination
     margin-top 1em
-
-  .create-btn
-    position absolute
-    bottom 3em
-    right 4em
 </style>
